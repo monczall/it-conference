@@ -1,7 +1,6 @@
 package dev.monczall.itconference.service;
 
 import dev.monczall.itconference.model.Conference;
-import dev.monczall.itconference.repository.LectureRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +10,10 @@ public class ConferenceService {
 
     private final Conference conference;
 
-    private final LectureRepository lectureRepository;
+    private final LectureService lectureService;
 
     public Conference getConferenceInfo() {
-        conference.setLectures(lectureRepository.findAll());
+        conference.setLectures(lectureService.getAllLectures());
 
         return conference;
     }

@@ -5,6 +5,7 @@ import dev.monczall.itconference.exception.exceptions.AttendeeLoginAlreadyInUseE
 import dev.monczall.itconference.exception.exceptions.LectureAtFullCapacityException;
 import dev.monczall.itconference.exception.exceptions.MissingDataException;
 import dev.monczall.itconference.model.Attendee;
+import dev.monczall.itconference.model.Lecture;
 import dev.monczall.itconference.model.Reservation;
 import dev.monczall.itconference.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +29,14 @@ public class ReservationService {
     private final AttendeeService attendeeService;
 
     private final LectureService lectureService;
+
+    public List<Lecture> getUserLectures(String login) {
+        Long attendeeId = attendeeService.getAttendeeIdByLogin(login);
+        List<Long> lectureIds = reservationRepository.findAllLectureIdsByAttendeeId(attendeeId);
+        List<Lecture> response = lectureService.getAllLecturesByIds(lectureIds);
+
+        return response;
+    }
 
     public ReservationDto reserveLecture(Long lectureId, String login, String email) {
 
