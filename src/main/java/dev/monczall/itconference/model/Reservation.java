@@ -1,22 +1,21 @@
 package dev.monczall.itconference.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
 @ToString
+@NoArgsConstructor
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "lecture_id")
-    private Long lectureId;
+    private long lectureId;
 
     @Column(name = "attendee_id")
-    private Long attendeeId;
+    private long attendeeId;
 }

@@ -14,4 +14,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT r.lectureId FROM Reservation r WHERE r.attendeeId = :attendeeId")
     List<Long> findAllLectureIdsByAttendeeId(@Param("attendeeId") Long attendeeId);
 
+    int countByLectureId(Long lectureId);
 }
