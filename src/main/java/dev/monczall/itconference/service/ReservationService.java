@@ -15,8 +15,6 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +58,7 @@ public class ReservationService {
 
         Lecture lecture = lectureService.getLectureById(lectureId);
 
-        if(lecture == null) {
+        if (lecture == null) {
             throw new LectureNotFoundException();
         }
 

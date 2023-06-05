@@ -9,6 +9,7 @@ import dev.monczall.itconference.repository.AttendeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,10 +21,14 @@ public class AttendeeService {
 
     private final AttendeeRepository attendeeRepository;
 
+    public List<Attendee> getAllAttendees() {
+        return attendeeRepository.findAll();
+    }
+
     public AttendeeDto updateAttendeeEmail(AttendeeDto attendeeDto) {
         Attendee attendeeToUpdate = getAttendeeByLogin(attendeeDto.login());
 
-        if(!isEmailValid(attendeeDto.email())) {
+        if (!isEmailValid(attendeeDto.email())) {
             throw new EmailBadlyFormattedException();
         }
 
