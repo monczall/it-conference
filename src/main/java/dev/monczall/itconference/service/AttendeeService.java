@@ -82,4 +82,8 @@ public class AttendeeService {
         return matcher.matches();
     }
 
+    public long countAllAttendees() {
+        return attendeeRepository.count();
+    }
+
 }

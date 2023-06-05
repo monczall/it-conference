@@ -25,4 +25,5 @@ public class LectureService {
     public List<Lecture> getAllLecturesByIds(List<Long> lectureIds) {
         return lectureRepository.findAllById(lectureIds);
     }
+
 }

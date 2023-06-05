@@ -72,7 +72,7 @@ public class ReservationService {
 
         String lectureName = lecture.getName();
 
-        sendReservationSuccessfulEmail(email, reservation.getId(), lectureName);
+        sendReservationSuccessfulEmail(attendee, lecture, reservation.getId());
 
         return new ReservationDto("Reservation successful", lectureName);
     }
@@ -103,27 +103,30 @@ public class ReservationService {
                 );
     }
 
-    private int getAttendantsCount(Long lectureId) {
+    public int getAttendantsCount(Long lectureId) {
         return reservationRepository.countByLectureId(lectureId);
     }
 
-    private void sendReservationSuccessfulEmail(String email, Long reservationId, String lectureName) {
+    private void sendReservationSuccessfulEmail(Attendee attendee, Lecture lecture, Long reservationId) {
         LocalDateTime date = LocalDateTime.now();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss");
         DateTimeFormatter emailFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
-
-        String fileName = "reservation-" + reservationId + "-" + email.substring(0, email.indexOf('@')) + "-"
+        String fileName = "reservation-" + reservationId + "-"
+                + attendee.getEmail().substring(0, attendee.getEmail().indexOf('@')) + "-"
                 + date.format(format) + ".txt";
 
         new File(fileName);
 
-        try {
-            PrintWriter pw = new PrintWriter(fileName);
+        try (PrintWriter pw = new PrintWriter(fileName)) {
             pw.println("Date: " + date.format(emailFormat));
-            pw.println("Receiver: " + email);
-            pw.println("Reservation for: " + lectureName + " successful.");
-            pw.close();
+            pw.println("Receiver: " + attendee.getEmail());
+            pw.println("\nReservation details: ");
+            pw.printf("\tLogin: %s\n\tLecture name: %s\n\tLecture start time: %s\n\tLecture end time: %s\n",
+                    attendee.getLogin(),
+                    lecture.getName(),
+                    lecture.getStartTime().format(emailFormat),
+                    lecture.getEndTime().format(emailFormat));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
