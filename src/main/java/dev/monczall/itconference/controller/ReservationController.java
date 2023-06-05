@@ -1,5 +1,6 @@
 package dev.monczall.itconference.controller;
 
+import dev.monczall.itconference.controller.model.AttendeeDto;
 import dev.monczall.itconference.controller.model.ReservationDto;
 import dev.monczall.itconference.model.Lecture;
 import dev.monczall.itconference.service.ReservationService;
@@ -21,8 +22,8 @@ public class ReservationController {
     }
 
     @PostMapping("/{lectureId}/")
-    public ReservationDto reserveLecture(@PathVariable Long lectureId, @RequestParam String login, @RequestParam String email) {
-        return reservationService.reserveLecture(lectureId, login, email);
+    public ReservationDto reserveLecture(@PathVariable Long lectureId, @RequestBody AttendeeDto attendeeDto) {
+        return reservationService.reserveLecture(lectureId, attendeeDto.login(), attendeeDto.email());
     }
 
 }

@@ -38,7 +38,7 @@ public class ReservationService {
 
     public ReservationDto reserveLecture(Long lectureId, String login, String email) {
 
-        if (login.isBlank() || !isEmailValid(email)) {
+        if (login.isBlank() || !attendeeService.isEmailValid(email)) {
             throw new MissingDataException();
         }
 
@@ -95,12 +95,6 @@ public class ReservationService {
 
     private int getAttendantsCount(Long lectureId) {
         return reservationRepository.countByLectureId(lectureId);
-    }
-
-    private boolean isEmailValid(String email) {
-        Pattern pattern = Pattern.compile("^.+@.+\\..+$");
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
     }
 
     private void sendReservationSuccessfulEmail(String email, Long reservationId, String lectureName) {

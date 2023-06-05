@@ -1,13 +1,17 @@
 package dev.monczall.itconference.service;
 
+import dev.monczall.itconference.controller.model.AttendeeDto;
 import dev.monczall.itconference.exception.exceptions.AttendeeLoginAlreadyInUseException;
 import dev.monczall.itconference.exception.exceptions.AttendeeNotFoundException;
+import dev.monczall.itconference.exception.exceptions.EmailBadlyFormattedException;
 import dev.monczall.itconference.model.Attendee;
 import dev.monczall.itconference.repository.AttendeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Service
@@ -15,6 +19,20 @@ import java.util.Optional;
 public class AttendeeService {
 
     private final AttendeeRepository attendeeRepository;
+
+    public AttendeeDto updateAttendeeEmail(AttendeeDto attendeeDto) {
+        Attendee attendeeToUpdate = getAttendeeByLogin(attendeeDto.login());
+
+        if(!isEmailValid(attendeeDto.email())) {
+            throw new EmailBadlyFormattedException();
+        }
+
+        attendeeToUpdate.setEmail(attendeeDto.email());
+
+        attendeeRepository.save(attendeeToUpdate);
+
+        return attendeeDto;
+    }
 
     public Attendee registerNewAttendee(String login, String email) {
         if (attendeeRepository.findByLogin(login).isPresent()) {
@@ -50,6 +68,12 @@ public class AttendeeService {
         );
 
         return attendee.getId();
+    }
+
+    public boolean isEmailValid(String email) {
+        Pattern pattern = Pattern.compile("^.+@.+\\..+$");
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
 }
