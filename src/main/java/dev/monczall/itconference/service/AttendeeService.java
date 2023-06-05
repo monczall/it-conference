@@ -1,5 +1,6 @@
 package dev.monczall.itconference.service;
 
+import dev.monczall.itconference.controller.mapper.AttendeeDtoMapper;
 import dev.monczall.itconference.controller.model.AttendeeDto;
 import dev.monczall.itconference.exception.exceptions.AttendeeLoginAlreadyInUseException;
 import dev.monczall.itconference.exception.exceptions.AttendeeNotFoundException;
@@ -21,8 +22,8 @@ public class AttendeeService {
 
     private final AttendeeRepository attendeeRepository;
 
-    public List<Attendee> getAllAttendees() {
-        return attendeeRepository.findAll();
+    public List<AttendeeDto> getAllAttendees() {
+        return AttendeeDtoMapper.mapAttendeeToAttendeeDto(attendeeRepository.findAll());
     }
 
     public AttendeeDto updateAttendeeEmail(AttendeeDto attendeeDto) {

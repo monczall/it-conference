@@ -36,11 +36,13 @@ public class ReservationService {
 
     public ReservationDto reserveLecture(Long lectureId, String login, String email) {
 
+        Lecture lecture = lectureService.getLectureById(lectureId);
+
         if (login.isBlank() || !attendeeService.isEmailValid(email)) {
             throw new MissingDataException();
         }
 
-        if (getAttendantsCount(lectureId) >= 5) {
+        if (getAttendantsCount(lectureId) >= lecture.getCapacity()) {
             throw new LectureAtFullCapacityException();
         }
 
@@ -55,8 +57,6 @@ public class ReservationService {
         } else {
             attendee = attendeeService.getAttendeeByLogin(login);
         }
-
-        Lecture lecture = lectureService.getLectureById(lectureId);
 
         if (isAttendeeBusy(login, lecture)) {
             throw new AttendeeIsBusyAtTheTimeException();

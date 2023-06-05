@@ -18,7 +18,7 @@ public class AttendeeController {
 
     @GetMapping
     public List<AttendeeDto> getAllAttendees() {
-        return AttendeeDtoMapper.mapAttendeeToAttendeeDto(attendeeService.getAllAttendees());
+        return attendeeService.getAllAttendees();
     }
 
     @PutMapping

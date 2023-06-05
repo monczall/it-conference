@@ -18,6 +18,7 @@ public class Lecture {
     private String name;
     @Column(name = "path_name")
     private String pathName;
+    private int capacity;
     @Column(name = "start_time")
     private LocalDateTime startTime;
     @Column(name = "end_time")
