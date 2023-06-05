@@ -1,9 +1,6 @@
 package dev.monczall.itconference.exception;
 
-import dev.monczall.itconference.exception.exceptions.AttendeeLoginAlreadyInUseException;
-import dev.monczall.itconference.exception.exceptions.AttendeeNotFoundException;
-import dev.monczall.itconference.exception.exceptions.LectureAtFullCapacityException;
-import dev.monczall.itconference.exception.exceptions.MissingDataException;
+import dev.monczall.itconference.exception.exceptions.*;
 import dev.monczall.itconference.exception.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +43,22 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(BAD_REQUEST.value(), ex.getMessage());
 
         return ResponseEntity.status(BAD_REQUEST)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(AttendeeIsBusyAtTheTimeException.class)
+    public ResponseEntity<ErrorResponse> handleAttendeeIsBusyAtTheTimeException(AttendeeIsBusyAtTheTimeException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(CONFLICT.value(), ex.getMessage());
+
+        return ResponseEntity.status(CONFLICT)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(LectureNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleLectureNotFoundException(LectureNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(NOT_FOUND.value(), ex.getMessage());
+
+        return ResponseEntity.status(NOT_FOUND)
                 .body(errorResponse);
     }
 }

@@ -17,12 +17,8 @@ public class LectureService {
         return lectureRepository.findAll();
     }
 
-    public String getLectureNameById(Long id) {
-        return lectureRepository.findNameById(id);
-    }
-
-    public Lecture getLectureById(Long id) {
-        return lectureRepository.findById(id).orElseThrow(() -> new RuntimeException(""));
+    public Lecture getLectureById(Long lectureId) {
+        return lectureRepository.findById(lectureId).orElse(null);
     }
 
     public List<Lecture> getAllLecturesByIds(List<Long> lectureIds) {

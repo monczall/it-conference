@@ -1,9 +1,7 @@
 package dev.monczall.itconference.service;
 
 import dev.monczall.itconference.controller.model.ReservationDto;
-import dev.monczall.itconference.exception.exceptions.AttendeeLoginAlreadyInUseException;
-import dev.monczall.itconference.exception.exceptions.LectureAtFullCapacityException;
-import dev.monczall.itconference.exception.exceptions.MissingDataException;
+import dev.monczall.itconference.exception.exceptions.*;
 import dev.monczall.itconference.model.Attendee;
 import dev.monczall.itconference.model.Lecture;
 import dev.monczall.itconference.model.Reservation;
@@ -40,24 +38,34 @@ public class ReservationService {
 
     public ReservationDto reserveLecture(Long lectureId, String login, String email) {
 
-        if(login.isBlank() || !isEmailValid(email)) {
-            throw new MissingDataException("Please fill all required data");
+        if (login.isBlank() || !isEmailValid(email)) {
+            throw new MissingDataException();
         }
 
-        if(getAttendantsCount(lectureId) >= 5) {
-            throw new LectureAtFullCapacityException("There are no more free spots in this lecture");
+        if (getAttendantsCount(lectureId) >= 5) {
+            throw new LectureAtFullCapacityException();
         }
 
-        if(!attendeeService.checkAttendeeLoginAndEmailMatch(login, email)) {
-            throw new AttendeeLoginAlreadyInUseException("Attendee with given login already exists");
+        if (!attendeeService.checkAttendeeLoginAndEmailMatch(login, email)) {
+            throw new AttendeeLoginAlreadyInUseException();
         }
 
         Attendee attendee;
 
-        if(!attendeeService.checkAttendeeExistsByLogin(login)) {
+        if (!attendeeService.checkAttendeeExistsByLogin(login)) {
             attendee = attendeeService.registerNewAttendee(login, email);
         } else {
             attendee = attendeeService.getAttendeeByLogin(login);
+        }
+
+        Lecture lecture = lectureService.getLectureById(lectureId);
+
+        if(lecture == null) {
+            throw new LectureNotFoundException();
+        }
+
+        if (isAttendeeBusy(login, lecture)) {
+            throw new AttendeeIsBusyAtTheTimeException();
         }
 
         Reservation newReservation = new Reservation();
@@ -68,12 +76,21 @@ public class ReservationService {
 
         System.out.println(reservation);
 
-        String lectureName = lectureService.getLectureNameById(lectureId);
-
+        String lectureName = lecture.getName();
 
         sendReservationSuccessfulEmail(email, reservation.getId(), lectureName);
 
         return new ReservationDto("Reservation successful", lectureName);
+    }
+
+    private boolean isAttendeeBusy(String login, Lecture newLecture) {
+        List<Lecture> userLectures = getUserLectures(login);
+
+        return userLectures.stream()
+                .anyMatch(userLecture ->
+                        newLecture.getStartTime().isBefore(userLecture.getEndTime()) &&
+                                newLecture.getEndTime().isAfter(userLecture.getStartTime())
+                );
     }
 
     private int getAttendantsCount(Long lectureId) {
@@ -86,7 +103,7 @@ public class ReservationService {
         return matcher.matches();
     }
 
-    private void sendReservationSuccessfulEmail(String email, Long reservationId, String lectureName)  {
+    private void sendReservationSuccessfulEmail(String email, Long reservationId, String lectureName) {
         LocalDateTime date = LocalDateTime.now();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss");
         DateTimeFormatter emailFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");

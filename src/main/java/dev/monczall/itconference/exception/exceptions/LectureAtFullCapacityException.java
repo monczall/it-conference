@@ -1,7 +1,7 @@
 package dev.monczall.itconference.exception.exceptions;
 
 public class LectureAtFullCapacityException extends RuntimeException {
-    public LectureAtFullCapacityException(String message) {
-        super(message);
+    public LectureAtFullCapacityException() {
+        super("There are no more free spots in this lecture");
     }
 }

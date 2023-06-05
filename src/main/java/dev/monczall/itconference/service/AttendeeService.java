@@ -17,8 +17,8 @@ public class AttendeeService {
     private final AttendeeRepository attendeeRepository;
 
     public Attendee registerNewAttendee(String login, String email) {
-        if(attendeeRepository.findByLogin(login).isPresent()) {
-            throw new AttendeeLoginAlreadyInUseException("Attendee with given login already exists");
+        if (attendeeRepository.findByLogin(login).isPresent()) {
+            throw new AttendeeLoginAlreadyInUseException();
         }
 
         Attendee attendee = new Attendee();
@@ -36,29 +36,20 @@ public class AttendeeService {
         Optional<Attendee> optionalAttendee = attendeeRepository.findByLogin(login);
 
         return optionalAttendee.map(attendee -> attendee.getEmail().equals(email)).orElse(true);
-
-    }
-
-    public boolean checkAttendeeExistsWithLoginAndEmailOrUnique(String login, String email) {
-        Optional<Attendee> optionalAttendee = attendeeRepository.findByLogin(login);
-
-        return optionalAttendee.map(attendee -> attendee.getEmail().equals(email))
-                .orElse(true);
     }
 
     public Attendee getAttendeeByLogin(String login) {
         return attendeeRepository.findByLogin(login).orElseThrow(
-                () -> new AttendeeNotFoundException("Attendee not found")
+                () -> new AttendeeNotFoundException()
         );
     }
 
     public Long getAttendeeIdByLogin(String login) {
         Attendee attendee = attendeeRepository.findByLogin(login).orElseThrow(
-                () -> new AttendeeNotFoundException("Attendee not found")
+                () -> new AttendeeNotFoundException()
         );
 
         return attendee.getId();
     }
-
 
 }
