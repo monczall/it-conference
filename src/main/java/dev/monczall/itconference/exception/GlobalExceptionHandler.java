@@ -69,4 +69,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(BAD_REQUEST)
                 .body(errorResponse);
     }
+
+    @ExceptionHandler(AttendeeIsNotAssignedToLectureException.class)
+    public ResponseEntity<ErrorResponse> handleAttendeeIsNotAssignedToLectureException(
+            AttendeeIsNotAssignedToLectureException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(BAD_REQUEST.value(), ex.getMessage());
+
+        return ResponseEntity.status(BAD_REQUEST)
+                .body(errorResponse);
+    }
 }

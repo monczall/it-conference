@@ -1,5 +1,6 @@
 package dev.monczall.itconference.service;
 
+import dev.monczall.itconference.exception.exceptions.LectureNotFoundException;
 import dev.monczall.itconference.model.Lecture;
 import dev.monczall.itconference.repository.LectureRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class LectureService {
     }
 
     public Lecture getLectureById(Long lectureId) {
-        return lectureRepository.findById(lectureId).orElse(null);
+        return lectureRepository.findById(lectureId).orElseThrow(() -> new LectureNotFoundException());
     }
 
     public List<Lecture> getAllLecturesByIds(List<Long> lectureIds) {

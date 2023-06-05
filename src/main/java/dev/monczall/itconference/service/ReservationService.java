@@ -58,10 +58,6 @@ public class ReservationService {
 
         Lecture lecture = lectureService.getLectureById(lectureId);
 
-        if (lecture == null) {
-            throw new LectureNotFoundException();
-        }
-
         if (isAttendeeBusy(login, lecture)) {
             throw new AttendeeIsBusyAtTheTimeException();
         }
@@ -79,6 +75,22 @@ public class ReservationService {
         sendReservationSuccessfulEmail(email, reservation.getId(), lectureName);
 
         return new ReservationDto("Reservation successful", lectureName);
+    }
+
+    public void deleteReservation(Long lectureId, String login) {
+
+        lectureService.getLectureById(lectureId);
+
+        Long attendeeId = attendeeService.getAttendeeIdByLogin(login);
+
+        boolean isAttending = reservationRepository.findAllLectureIdsByAttendeeId(attendeeId).stream()
+                .anyMatch(lecture -> lecture == lectureId);
+
+        if (!isAttending) {
+            throw new AttendeeIsNotAssignedToLectureException();
+        }
+
+        reservationRepository.deleteByLectureIdAndAttendeeId(lectureId, attendeeId);
     }
 
     private boolean isAttendeeBusy(String login, Lecture newLecture) {
@@ -117,4 +129,5 @@ public class ReservationService {
         }
 
     }
+
 }
