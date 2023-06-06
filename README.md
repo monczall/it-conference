@@ -5,11 +5,12 @@ The goal of this project was to create REST Api for IT Conference system.
 ## Getting Started
 
 ### Prerequisites
+
 - Java Development Kit (JDK) 17 or above
 - Maven
 ---
-### Installation
 
+### Installation
 Clone the repository
 
 ```bash
@@ -24,21 +25,27 @@ mvn clean install
 ```
 ---
 ### Starting the server
-
 Execute command
 
 ```bash
 java -jar target/it-conference-1.0.jar
 ```
 
-Server will run on localhost:8080
+Server will run on `localhost:8080`
 
 ---
+## Swagger
+
+Swagger is available at: `http://localhost:8080/swagger-ui/index.html`
+
+---
+
 
 ## API Endpoints
 
 #### Endpoint
-- 'GET /api/v1/conference' - Get Conference Details
+
+- 'GET `/api/v1/conference`' - Get Conference Details
 #### Example Response
 ```json
 {
@@ -66,7 +73,8 @@ Server will run on localhost:8080
 ```
 ---
 #### Endpoint
-- 'GET /api/v1/conference/details/paths' - Get percentage interest for each path 
+
+- 'GET `/api/v1/conference/details/paths`' - Get percentage interest for each path 
 #### Example Response
 ```json
 [
@@ -89,7 +97,8 @@ Server will run on localhost:8080
 ```
 ---
 #### Endpoint
-- 'GET /api/v1/conference/details/lectures' - Get percentage interest for each lecture
+
+- 'GET `/api/v1/conference/details/lectures`' - Get percentage interest for each lecture
 #### Example Response
 ```json
 [
@@ -119,7 +128,8 @@ Server will run on localhost:8080
 ```
 ---
 #### Endpoint
-- 'GET /api/v1/reservations/{login}' - Get list of lectures given user is attending
+
+- 'GET `/api/v1/reservations/{login}`' - Get list of lectures given user is attending
 
 #### Example Parameter
 ```
@@ -140,14 +150,15 @@ test2
 ```
 ---
 #### Endpoint
-- 'POST /api/v1/reservations/{lectureId}' - Make a reservation for lecture with 
+
+- 'POST `/api/v1/reservations/{lectureId}`' - Make a reservation for lecture with 
 given lecture ID for user given in body. When reservation is successful send confirmation email.
 #### Example Parameter
 ```
 4
 ```
 #### Example Body
-```
+```json
 {
   "login": "user1",
   "email": "user1@xyz.com"
@@ -162,21 +173,23 @@ given lecture ID for user given in body. When reservation is successful send con
 ```
 ---
 #### Endpoint
-- 'DELETE /api/v1/conference' - Cancel reservation of lecture with given lecture ID, for 
+
+- 'DELETE `/api/v1/reservations/{lectureId}`' - Cancel reservation of lecture with given lecture ID, for 
 user given in body.
 #### Example Parameter
 ```
 1
 ```
 #### Example Body
-```
+```json
 {
   "login": "test1"
 }
 ```
 ---
 #### Endpoint
-- 'GET /api/v1/attendees' - Get all registered attendees
+
+- 'GET `/api/v1/attendees`' - Get all registered attendees
 #### Example Response
 ```json
 [
@@ -196,7 +209,8 @@ user given in body.
 ```
 ---
 #### Endpoint
-- 'PUT /api/v1/attendees' - Edit email address for user with given login
+
+- 'PUT `/api/v1/attendees`' - Update email address for user with given login
 #### Example Body
 ```json
 {
