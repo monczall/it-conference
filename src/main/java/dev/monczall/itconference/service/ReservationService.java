@@ -81,16 +81,20 @@ public class ReservationService {
 
         lectureService.getLectureById(lectureId);
 
-        Long attendeeId = attendeeService.getAttendeeIdByLogin(login);
+        Attendee attendee = attendeeService.getAttendeeByLogin(login);
 
-        boolean isAttending = reservationRepository.findAllLectureIdsByAttendeeId(attendeeId).stream()
+        boolean isAttending = reservationRepository.findAllLectureIdsByAttendeeId(attendee.getId()).stream()
                 .anyMatch(lecture -> lecture == lectureId);
 
         if (!isAttending) {
             throw new AttendeeIsNotAssignedToLectureException();
         }
 
-        reservationRepository.deleteByLectureIdAndAttendeeId(lectureId, attendeeId);
+        reservationRepository.deleteByLectureIdAndAttendeeId(lectureId, attendee.getId());
+
+        if(reservationRepository.findAllLectureIdsByAttendeeId(attendee.getId()).size() == 0) {
+            attendeeService.deleteAttendee(attendee);
+        }
     }
 
     private boolean isAttendeeBusy(String login, Lecture newLecture) {

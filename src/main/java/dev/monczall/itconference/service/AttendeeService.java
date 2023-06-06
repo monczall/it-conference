@@ -86,4 +86,8 @@ public class AttendeeService {
         return attendeeRepository.count();
     }
 
+    public void deleteAttendee(Attendee attendee) {
+        attendeeRepository.delete(attendee);
+    }
+
 }
