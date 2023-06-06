@@ -1,6 +1,7 @@
 package dev.monczall.itconference.controller;
 
 import dev.monczall.itconference.controller.model.LectureDetailsDto;
+import dev.monczall.itconference.controller.model.PathDetailsDto;
 import dev.monczall.itconference.model.Conference;
 import dev.monczall.itconference.service.ConferenceService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,11 @@ public class ConferenceController {
     @GetMapping("details/lectures")
     public List<LectureDetailsDto> getAllLecturesDetails() {
         return conferenceService.getAllLecturesDetails();
+    }
+
+    @GetMapping("details/paths")
+    public List<PathDetailsDto> getAllPathsDetails() {
+        return conferenceService.getAllPathsDetails();
     }
 
 }
